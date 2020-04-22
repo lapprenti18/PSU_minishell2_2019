@@ -59,9 +59,10 @@ char *hight_separator(char *str)
 
 char *parse_left(char *str, int size_str)
 {
-    char *left = malloc(sizeof(char) * (size_str + 1));
+    char *left = malloc(sizeof(char) * (size_str + 2));
 
-    left[size_str] = '\0';
+    left[size_str + 1] = '\0';
+    left[size_str] = '\n';
     for (int size = 0; size < size_str ; size += 1)
         left[size] = str[size];
     return (left);
@@ -69,13 +70,17 @@ char *parse_left(char *str, int size_str)
 
 char *parse_right(char *str, int size_str, int size_tot)
 {
-    char *left = malloc(sizeof(char) * (size_tot + 1));
+    char *left = malloc(sizeof(char) * (size_tot + 2));
 
-    left[size_tot] = '\0';
+    left[size_tot + 1] = '\0';
     for (int temp = 0; str[size_str]; size_str += 1) {
        left[temp] = str[size_str];
        temp += 1;
     }
+    if (left[size_tot - 1] == '\n')
+        left[size_tot] = '\0';
+    else
+        left[size_tot] = '\n';
     return (left);
 }
 

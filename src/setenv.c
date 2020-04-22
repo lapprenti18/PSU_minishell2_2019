@@ -45,8 +45,8 @@ int new_environement(env_t *new_env, char **tab)
 int error(char *str)
 {
     for (int temps = 0; str[temps]; temps += 1) {
-        if (str[temps] < 'A' || str[temps] > 'Z' && \
-        str[temps] < 'a' || str[temps] > 'z') {
+        if (str[temps] < 'A' || (str[temps] > 'Z' && \
+        str[temps] < 'a') || str[temps] > 'z') {
             return (0);
         }
     }
