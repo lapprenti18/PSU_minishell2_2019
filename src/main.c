@@ -11,6 +11,8 @@
 
 int check_separator(char *str)
 {
+    if (str == NULL)
+        return (1);
     for (int temp = 0; str[temp]; temp += 1) {
         if (str[temp] == '|' || str[temp] == '>' || str[temp] == '<' || str[temp] == ';')
             return (0);
@@ -57,10 +59,18 @@ char *hight_separator(char *str)
     return (opt);
 }
 
-char *parse_left(char *str, int size_str)
+char *parse_left(char *str, int size_str, char opt)
 {
     char *left = malloc(sizeof(char) * (size_str + 2));
+    int temp = 0;
 
+    for (; str[temp] != opt; temp += 1) {
+        if (str[temp] != ' ' && str[temp] != '\n')
+            break;
+    }
+    if (str[temp] == opt) {
+        return (NULL);
+    }
     left[size_str + 1] = '\0';
     left[size_str] = '\n';
     for (int size = 0; size < size_str ; size += 1)
@@ -90,9 +100,9 @@ void parse_str(parse_t *parser, char *str)
     int size_str_temp = size_str;
     parser->opt = hight_separator(str);
 
-    for (; size_str != 0; size_str--) {
+    for (; size_str != -1; size_str--) {
         if (str[size_str] == parser->opt[0] && parser->opt[1] == '\0') {
-            parser->left = parse_left(str, size_str);
+            parser->left = parse_left(str, size_str, parser->opt[0]);
             parser->right = parse_right(str, size_str + 1, size_str_temp - size_str);
             break;
         }
@@ -106,9 +116,9 @@ tree_t *create_box(char *str)
     tree->right = NULL;
     tree->left = NULL;
     tree->str = str_cpy(str);
-    tree->opt = NULL;
+    tree->opt = str_cpy(str);
     tree->fd[0] = 0;
-    tree->fd[1] = 0;
+    tree->fd[1] = 1;
     return (tree);
 }
 
@@ -117,15 +127,11 @@ void recursive(tree_t *tree, char *str)
     parse_t *parser = malloc(sizeof(parse_t));
 
     if (check_separator(str) == 1) {
-        tree->str = str_cpy(str);
-        tree->opt = NULL;
+        tree->opt = str_cpy(str);
         return;
     }
     parse_str(parser, str);
     tree->opt = str_cpy(parser->opt);
-    // printf("%s\n", parser->left);
-    // printf("%s\n", parser->opt);
-    // printf("%s\n", parser->right);
     tree->right = create_box(parser->right);
     tree->left = create_box(parser->left);
     recursive(tree->right, parser->right);
@@ -153,12 +159,7 @@ int main(int ac, char **av, char **env)
                 my_putstr("exit", 0, 1);
             exit (0);
         }
-        tree->right = NULL;
-        tree->left = NULL;
-        tree->fd[0] = 0;
-        tree->fd[1] = 0;
-        tree->opt = NULL;
-        tree->str = str_cpy(line);
+        tree = create_box(line);
         recursive(tree, line);
         execute_tree(tree, &new_env, &last_line);
     } while (read != -1);

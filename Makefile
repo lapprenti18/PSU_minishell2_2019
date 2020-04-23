@@ -26,6 +26,7 @@ COMP	=	src/main.c	\
 			src/setenv.c	\
 			src/cd.c	\
 			src/segfault.c	\
+			src/redirect.c
 
 CFLAGS  =	-W -Wall -Wextra -Iinclude -lncurses -g3
 

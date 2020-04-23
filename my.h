@@ -69,7 +69,7 @@ int no_bin(env_t *new_env, char *cmd, last_line_t *last_line);
 int str_cmp(char *str, char *str2);
 char **my_str_to_word_array_path(char *str);
 char **my_str_to_word_array(char *str);
-void go_fork(env_t *new_env, char **cmd);
+void go_fork(env_t *new_env, char **cmd, int *fd);
 int str_ncmp(char *str, char *str2);
 char *my_memset(char *str, int size);
 int my_cd(char *cmd, env_t *new_env, last_line_t *last_line);
@@ -87,5 +87,11 @@ int new_environement(env_t *new_env, char **tab);
 int setenv_(env_t *new_env, char *cmd);
 void segfault(int pid);
 int main_minishel(char *str, char **env);
+void simple_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
+void double_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
+void pipe_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
+void simple_left_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
+
+
 
 #endif /* MY_H_ */

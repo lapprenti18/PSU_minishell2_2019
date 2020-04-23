@@ -24,17 +24,23 @@ new_env->good_env[temp]) != 1; temp += 1);
     return (path);
 }
 
-void exection(char *cmd, env_t *new_env, char **command)
+void exection(char *cmd, env_t *new_env, char **command, int *fd, int *new_fd)
 {
     pid_t pid;
 
     pid = fork();
     if (pid == 0){
+        dup2(fd[0], 0);
+        dup2(fd[1], 1);
         execve(cmd, command, new_env->good_env);
         print_error(command);
         exit (84);
     } else {
         wait(&pid);
+        close(fd[0]);
+        close(fd[1]);
+        dup2(new_fd[0], 0);
+        dup2(new_fd[1], 1);
         segfault(pid);
     }
 }
@@ -70,12 +76,15 @@ void no_trace(env_t *new_env, char **cmd)
     return;
 }
 
-void go_fork(env_t *new_env, char **cmd)
+void go_fork(env_t *new_env, char **cmd, int *fd)
 {
     char **path = search_path(new_env);
     int acces = 0;
     int temp;
+    int new_fd[2];
 
+    new_fd[0] = dup(0);
+    new_fd[1] = dup(1);
     if (!cmd[0])
         return;
     if (path == NULL) {
@@ -83,13 +92,13 @@ void go_fork(env_t *new_env, char **cmd)
         return;
     }
     if ((access(cmd[0], X_OK)) == 0)
-        return (exection(cmd[0], new_env, cmd));
+        return (exection(cmd[0], new_env, cmd, fd, new_fd));
     if (cmd[0][0] == '/')
         return (no_trace(new_env, cmd));
     for (temp = 1; path[temp]; temp += 1) {
         if ((acces = access(cat(cat(path[temp], "/"), cmd[0]), X_OK)) == 0)
             break;
     }
-    (acces == 0) ? exection(cat(cat(path[temp], "/"), cmd[0]), new_env, cmd) :\
+    (acces == 0) ? exection(cat(cat(path[temp], "/"), cmd[0]), new_env, cmd, fd, new_fd) :\
     my_putstr(cat(cmd[0], ": Command not found."), 0, 1);
 }
