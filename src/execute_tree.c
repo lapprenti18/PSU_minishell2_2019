@@ -25,19 +25,19 @@ void execute_tree(tree_t *tree, env_t *new_env, last_line_t *last_line)
     }
     if (str_cmp(";", tree->opt) == 1) {
         if (tree->left->opt == NULL) {
-            printf("left\n");
+            // printf("left\n");
             one_cmd(tree->left->str, new_env, last_line);
         }
         if (tree->left->opt != NULL) {
-            printf("test2\n");
+            // printf("test2\n");
             execute_tree(tree->left, new_env, last_line);
         }
         if (tree->right->opt == NULL) {
-            printf("right\n");
+            // printf("right\n");
             one_cmd(tree->right->str, new_env, last_line);
         }
         if (tree->right->opt != NULL) {
-            printf("test1\n");
+            // printf("test1\n");
             execute_tree(tree->right, new_env, last_line);
         }
     }

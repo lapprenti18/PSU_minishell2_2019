@@ -121,9 +121,9 @@ void recursive(tree_t *tree, char *str)
     }
     parse_str(parser, str);
     tree->opt = str_cpy(parser->opt);
-    printf("%s\n", parser->left);
-    printf("%s\n", parser->opt);
-    printf("%s\n", parser->right);
+    // printf("%s\n", parser->left);
+    // printf("%s\n", parser->opt);
+    // printf("%s\n", parser->right);
     tree->right = create_box(parser->right);
     tree->left = create_box(parser->left);
     recursive(tree->right, parser->right);
