@@ -107,6 +107,8 @@ tree_t *create_box(char *str)
     tree->left = NULL;
     tree->str = str_cpy(str);
     tree->opt = NULL;
+    tree->fd[0] = 0;
+    tree->fd[1] = 0;
     return (tree);
 }
 
@@ -140,6 +142,7 @@ int main(int ac, char **av, char **env)
     last_line_t last_line;
     env_t new_env;
 
+
     new_env.good_env = str_cpy_tab(env);
     last_line.line = malloc(sizeof(char) * 9999);
     do {
@@ -152,6 +155,9 @@ int main(int ac, char **av, char **env)
         }
         tree->right = NULL;
         tree->left = NULL;
+        tree->fd[0] = 0;
+        tree->fd[1] = 0;
+        tree->opt = NULL;
         tree->str = str_cpy(line);
         recursive(tree, line);
         execute_tree(tree, &new_env, &last_line);
