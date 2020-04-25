@@ -51,8 +51,8 @@ int no_bin(env_t *new_env, char *cmd, last_line_t *last_line, tree_t *tree)
         return (setenv_(new_env, cmd, tree));
     if (str_ncmp("unsetenv", cmd) == 1)
         return (unsetenv_(new_env, cmd, tree));
-    if (str_ncmp("cd", cmd) == 1) {
-        my_cd(cmd, new_env, last_line, tree);
+    if (str_ncmp("cd", clear_str(cmd)) == 1) {
+        my_cd(clear_str(cmd), new_env, last_line, tree);
         return (0);
     }
     return (2);

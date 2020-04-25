@@ -12,9 +12,11 @@ char *clear_str(char *str)
     char *reslt = malloc(sizeof(char) * my_strlen(str) + 1);
     int temp = 0;
 
-    my_memset(reslt, my_strlen(str + 1));
+    if (str == NULL)
+        return (NULL);
+    my_memset(reslt, my_strlen(str));
     for (; str[temp] == ' '; temp += 1);
-    for (int index; str[temp]; temp += 1) {
+    for (int index = 0; str[temp]; temp += 1) {
         reslt[index] = str[temp];
         index += 1;
     }
