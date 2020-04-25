@@ -60,13 +60,15 @@ in alphanumeric characters.", 0, 1);
     return (0);
 }
 
-int setenv_(env_t *new_env, char *cmd)
+int setenv_(env_t *new_env, char *cmd, tree_t *tree)
 {
     char **tab = my_str_to_word_array(cmd);
     int incr = 0;
 
+    dup2(tree->fd[0], 0);
+    dup2(tree->fd[1], 1);
     if (tab[1] == NULL) {
-        display_env(new_env);
+        display_env(new_env, tree);
         return (0);
     }
     if (error(tab[1]) == 0)

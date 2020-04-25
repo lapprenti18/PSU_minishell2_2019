@@ -75,8 +75,10 @@ int just_cd_argv(char **cd, env_t *new_env, last_line_t *last_line)
     return (0);
 }
 
-int my_cd(char *cmd, env_t *new_env, last_line_t *last_line)
+int my_cd(char *cmd, env_t *new_env, last_line_t *last_line, tree_t *tree)
 {
+    dup2(tree->fd[0], 0);
+    dup2(tree->fd[1], 1);
     if (str_cmp("cd\n", cmd) == 1)
         return (just_cd(new_env, last_line));
     if (str_ncmp("cd ", cmd) == 1)

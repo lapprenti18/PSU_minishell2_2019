@@ -7,12 +7,12 @@
 
 #include "../my.h"
 
-void one_cmd(char *str, env_t *new_env, last_line_t *last_line, int *fd)
+void one_cmd(tree_t *tree, env_t *new_env, last_line_t *last_line)
 {
-    int no_binary = no_bin(new_env, str, last_line);
+    int no_binary = no_bin(new_env, tree->opt, last_line, tree);
 
     if (no_binary == 2)
-        go_fork(new_env, my_str_to_word_array(str), fd);
+        go_fork(new_env, my_str_to_word_array(tree->opt), tree->fd);
 }
 
 int tree_right(char *str)
@@ -53,5 +53,5 @@ void execute_tree(tree_t *tree, env_t *new_env, last_line_t *last_line)
         pipe_redirect(tree, new_env, last_line);
         return;
     }
-    one_cmd(tree->opt, new_env, last_line, tree->fd);
+    one_cmd(tree, new_env, last_line);
 }

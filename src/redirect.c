@@ -7,6 +7,20 @@
 
 #include "../my.h"
 
+char *clear_str(char *str)
+{
+    char *reslt = malloc(sizeof(char) * my_strlen(str) + 1);
+    int temp = 0;
+
+    my_memset(reslt, my_strlen(str + 1));
+    for (; str[temp] == ' '; temp += 1);
+    for (int index; str[temp]; temp += 1) {
+        reslt[index] = str[temp];
+        index += 1;
+    }
+    return (reslt);
+}
+
 void simple_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
 {
     int fd;
@@ -21,7 +35,8 @@ void simple_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
         return;
     }
     cmd = my_str_to_word_array_path(tree->right->opt);
-    cmd[0][my_strlen(cmd[0]) - 1] = '\0';
+    if (cmd[0][my_strlen(cmd[0]) - 1] == '\n')
+        cmd[0][my_strlen(cmd[0]) - 1] = '\0';
     fd = open(cmd[0], O_WRONLY | O_CREAT | O_TRUNC, 0664);
     if (fd == -1)
         return;
@@ -44,8 +59,10 @@ void double_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
         return;
     }
     cmd = my_str_to_word_array_path(tree->right->opt);
-    cmd[0][my_strlen(cmd[0]) - 1] = '\0';
-    fd = open(cmd[0], O_WRONLY | O_CREAT | O_APPEND, 0664);
+    if (cmd[0][my_strlen(cmd[0]) - 1] == '\n')
+        cmd[0][my_strlen(cmd[0]) - 1] = '\0';
+    // cmd[0] = clear_str(cmd[0]);
+    fd = open(cmd[0], O_WRONLY | O_APPEND | O_APPEND, 0664);
     tree->left->fd[1] = fd;
     execute_tree(tree->left, new_env, last_line);
     close(fd);
@@ -65,7 +82,9 @@ void simple_left_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
         return;
     }
     cmd = my_str_to_word_array_path(tree->right->opt);
-    cmd[0][my_strlen(cmd[0]) - 1] = '\0';
+    if (cmd[0][my_strlen(cmd[0]) - 1] == '\n')
+        cmd[0][my_strlen(cmd[0]) - 1] = '\0';
+    // cmd[0] = clear_str(cmd[0]);
     fd = open(cmd[0], O_RDONLY);
     tree->left->fd[0] = fd;
     execute_tree(tree->left, new_env, last_line);

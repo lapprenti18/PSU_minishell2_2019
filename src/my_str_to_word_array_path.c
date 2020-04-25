@@ -21,7 +21,7 @@ int    nb_word(char *str)
 
 int is_alpha(char c)
 {
-    return ((c != ' ') && (c != '=') && (c != ':') && (c != '\0'));
+    return ((c != ' ') && (c != '=') && (c != ':') && (c != '"') && (c != '\0'));
 }
 
 char    **fill_tab(char **tab, char *str, int t)

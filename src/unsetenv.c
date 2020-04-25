@@ -20,11 +20,13 @@ void delet_env(env_t *new_env, int incr)
     new_env->good_env = new_tab;
 }
 
-int unsetenv_(env_t *new_env, char *cmd)
+int unsetenv_(env_t *new_env, char *cmd, tree_t *tree)
 {
     char **tab = my_str_to_word_array(cmd);
     int incr = 0;
 
+    dup2(tree->fd[0], 0);
+    dup2(tree->fd[1], 1);
     if (tab[1] == NULL) {
         my_putstr("unsetenv: Too few arguments.", 0, 1);
         return (0);

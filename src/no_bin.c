@@ -7,8 +7,10 @@
 
 #include "../my.h"
 
-int display_env(env_t *new_env)
+int display_env(env_t *new_env, tree_t *tree)
 {
+    dup2(tree->fd[0], 0);
+    dup2(tree->fd[1], 1);
     for (int temp = 0; new_env->good_env[temp]; temp += 1)
         my_putstr(new_env->good_env[temp], 0, 1);
     return (0);
@@ -39,18 +41,18 @@ int tab_lengt(char **tab)
     return (a + 1);
 }
 
-int no_bin(env_t *new_env, char *cmd, last_line_t *last_line)
+int no_bin(env_t *new_env, char *cmd, last_line_t *last_line, tree_t *tree)
 {
     if (str_cmp("exit\n", cmd) == 1)
         return (-1);
     if (str_cmp("env\n", cmd) == 1)
-        return (display_env(new_env));
+        return (display_env(new_env, tree));
     if (str_ncmp("setenv", cmd) == 1)
-        return (setenv_(new_env, cmd));
+        return (setenv_(new_env, cmd, tree));
     if (str_ncmp("unsetenv", cmd) == 1)
-        return (unsetenv_(new_env, cmd));
+        return (unsetenv_(new_env, cmd, tree));
     if (str_ncmp("cd", cmd) == 1) {
-        my_cd(cmd, new_env, last_line);
+        my_cd(cmd, new_env, last_line, tree);
         return (0);
     }
     return (2);

@@ -32,12 +32,12 @@ void exection(char *cmd, env_t *new_env, char **command, int *fd, int *new_fd)
     if (pid == 0){
         dup2(fd[0], 0);
         dup2(fd[1], 1);
-        close(fd[0]);
         execve(cmd, command, new_env->good_env);
         print_error(command);
         exit (84);
     } else {
         wait(&pid);
+        close(fd[0]);
         close(fd[1]);
         dup2(new_fd[0], 0);
         dup2(new_fd[1], 1);
