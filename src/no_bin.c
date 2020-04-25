@@ -43,14 +43,14 @@ int tab_lengt(char **tab)
 
 int no_bin(env_t *new_env, char *cmd, last_line_t *last_line, tree_t *tree)
 {
-    if (str_cmp("exit\n", cmd) == 1)
+    if (str_cmp("exit\n", clear_str(cmd)) == 1)
         return (-1);
-    if (str_cmp("env\n", cmd) == 1)
+    if (str_cmp("env\n", clear_str(cmd)) == 1)
         return (display_env(new_env, tree));
-    if (str_ncmp("setenv", cmd) == 1)
-        return (setenv_(new_env, cmd, tree));
-    if (str_ncmp("unsetenv", cmd) == 1)
-        return (unsetenv_(new_env, cmd, tree));
+    if (str_ncmp("setenv", clear_str(cmd)) == 1)
+        return (setenv_(new_env, clear_str(cmd), tree));
+    if (str_ncmp("unsetenv", clear_str(cmd)) == 1)
+        return (unsetenv_(new_env, clear_str(cmd), tree));
     if (str_ncmp("cd", clear_str(cmd)) == 1) {
         my_cd(clear_str(cmd), new_env, last_line, tree);
         return (0);
