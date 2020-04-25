@@ -24,15 +24,10 @@ char *hight_separator(char *str)
 {
     char *opt = malloc(sizeof(char) * 3);
 
-    memset(opt, 0, 3);
+    my_memset(opt, 3);
     for (int temp = 0; str[temp]; temp += 1) {
         if (str[temp] == ';') {
             opt[0] = ';';
-            opt[1] = '\0';
-            continue;
-        }
-        if (str[temp] == '>' && str[temp + 1] != '>' && opt[0] != ';') {
-            opt[0] = '>';
             opt[1] = '\0';
             continue;
         }
@@ -41,14 +36,19 @@ char *hight_separator(char *str)
             opt[1] = '>';
             continue;
         }
-        if (str[temp] == '<' && str[temp + 1] != '<' && opt[0] != '>' && opt[0] != ';') {
-            opt[0] = '<';
+        if (str[temp] == '>' && str[temp + 1] != '>' && str[temp - 1] != '>' && opt[0] != ';') {
+            opt[0] = '>';
             opt[1] = '\0';
             continue;
         }
         if (str[temp] == '<' && str[temp + 1] == '<' && opt[0] != ';' && opt[0] != '>' && opt[0] != '<') {
             opt[0] = '<';
             opt[1] = '<';
+            continue;
+        }
+        if (str[temp] == '<' && str[temp + 1] != '<' && opt[0] != '>' && opt[0] != ';') {
+            opt[0] = '<';
+            opt[1] = '\0';
             continue;
         }
         if (str[temp] == '|' && opt[0] != ';' && opt[0] != '>' && opt[0] != '<') {
@@ -94,6 +94,22 @@ char *parse_right(char *str, int size_str, int size_tot)
     return (left);
 }
 
+char *test(char *str, char opt)
+{
+    int lenght = my_strlen(str) - 1;
+    char *result;
+
+    for (; lenght > 0; lenght -= 1) {
+        if (str[lenght] == opt && str[lenght - 1] == opt)
+            break;
+    }
+    result = malloc(sizeof(char) * lenght + 1);
+    for (int temp = 0; temp < lenght; temp += 1)
+        result[temp] = str[temp];
+    result[lenght - 1] = '\0';
+    return (result);
+}
+
 void parse_str(parse_t *parser, char *str)
 {
     int size_str = my_strlen(str) - 1;
@@ -103,6 +119,11 @@ void parse_str(parse_t *parser, char *str)
     for (; size_str != -1; size_str--) {
         if (str[size_str] == parser->opt[0] && parser->opt[1] == '\0') {
             parser->left = parse_left(str, size_str, parser->opt[0]);
+            parser->right = parse_right(str, size_str + 1, size_str_temp - size_str);
+            break;
+        }
+        else if (str[size_str] == parser->opt[0]) {
+            parser->left = test(str, parser->opt[0]);
             parser->right = parse_right(str, size_str + 1, size_str_temp - size_str);
             break;
         }
@@ -139,7 +160,7 @@ void recursive(tree_t *tree, char *str)
     return;
 }
 
-int main(int ac, char **av, char **env)
+void main_minishell_2(char **env)
 {
     tree_t *tree = malloc(sizeof(tree_t));
     size_t len = 0;
@@ -147,7 +168,6 @@ int main(int ac, char **av, char **env)
     char *line;
     last_line_t last_line;
     env_t new_env;
-
 
     new_env.good_env = str_cpy_tab(env);
     last_line.line = malloc(sizeof(char) * 9999);
@@ -163,5 +183,13 @@ int main(int ac, char **av, char **env)
         recursive(tree, line);
         execute_tree(tree, &new_env, &last_line);
     } while (read != -1);
+}
+
+int main(int ac, char **av, char **env)
+{
+    (void)av;
+    if (ac > 1)
+        return (84);
+    main_minishell_2(env);
     return (0);
 }

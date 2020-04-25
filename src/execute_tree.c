@@ -37,12 +37,12 @@ void execute_tree(tree_t *tree, env_t *new_env, last_line_t *last_line)
         tree->right ? execute_tree(tree->right, new_env, last_line) : 0;
         return;
     }
-    if (str_cmp(">", tree->opt) == 1) {
-        simple_right_redirect(tree, new_env, last_line);
-        return;
-    }
     if (str_cmp(">>", tree->opt) == 1) {
         double_right_redirect(tree, new_env, last_line);
+        return;
+    }
+    if (str_cmp(">", tree->opt) == 1) {
+        simple_right_redirect(tree, new_env, last_line);
         return;
     }
     if (str_cmp("<", tree->opt) == 1) {
