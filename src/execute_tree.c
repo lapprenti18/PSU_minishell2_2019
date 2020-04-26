@@ -24,8 +24,31 @@ int tree_right(char *str)
     return (1);
 }
 
+int test_opt(tree_t *tree, env_t *new_env, last_line_t *last_line)
+{
+    if (str_cmp(">>", tree->opt) == 1) {
+        double_right_redirect(tree, new_env, last_line);
+        return (0);
+    }
+    if (str_cmp(">", tree->opt) == 1) {
+        simple_right_redirect(tree, new_env, last_line);
+        return (0);
+    }
+    if (str_cmp("<", tree->opt) == 1) {
+        simple_left_redirect(tree, new_env, last_line);
+        return (0);
+    }
+    if (str_cmp("|", tree->opt) == 1) {
+        pipe_redirect(tree, new_env, last_line);
+        return (0);
+    }
+    return (-1);
+}
+
 void execute_tree(tree_t *tree, env_t *new_env, last_line_t *last_line)
 {
+    int err = 0;
+
     if (tree == NULL || tree->opt == NULL)
         return;
     if (tree->right) {
@@ -37,21 +60,8 @@ void execute_tree(tree_t *tree, env_t *new_env, last_line_t *last_line)
         tree->right ? execute_tree(tree->right, new_env, last_line) : 0;
         return;
     }
-    if (str_cmp(">>", tree->opt) == 1) {
-        double_right_redirect(tree, new_env, last_line);
+    err = test_opt(tree, new_env, last_line);
+    if (err == 0)
         return;
-    }
-    if (str_cmp(">", tree->opt) == 1) {
-        simple_right_redirect(tree, new_env, last_line);
-        return;
-    }
-    if (str_cmp("<", tree->opt) == 1) {
-        simple_left_redirect(tree, new_env, last_line);
-        return;
-    }
-    if (str_cmp("|", tree->opt) == 1) {
-        pipe_redirect(tree, new_env, last_line);
-        return;
-    }
     one_cmd(tree, new_env, last_line);
 }

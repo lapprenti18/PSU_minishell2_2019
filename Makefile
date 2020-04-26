@@ -27,7 +27,11 @@ COMP	=	src/main.c	\
 			src/cd.c	\
 			src/segfault.c	\
 			src/redirect.c	\
-			src/test.c
+			src/error_cd.c	\
+			src/my_for.c	\
+			src/parse_str.c	\
+			src/parser.c	\
+			src/fd.c
 
 CFLAGS  =	-W -Wall -Wextra -Iinclude -lncurses -g3
 

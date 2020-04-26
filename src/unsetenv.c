@@ -35,7 +35,7 @@ int unsetenv_(env_t *new_env, char *cmd, tree_t *tree)
     if (incr != 2)
         return (0);
     for (incr = 0; new_env->good_env[incr] && str_ncmp(tab[1], \
-new_env->good_env[incr]) != 1; incr += 1);
+    new_env->good_env[incr]) != 1; incr += 1);
     if (new_env->good_env[incr] == NULL)
         return (0);
     delet_env(new_env, incr);

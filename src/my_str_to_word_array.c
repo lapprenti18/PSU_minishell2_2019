@@ -29,8 +29,7 @@ char    **fill_tab1(char **tab, char *str, int t)
     int e = 0;
     int x;
 
-    for (int c = 0; c < t ; c++)
-    {
+    for (int c = 0; c < t ; c++) {
         x = 0;
         for (;!is_alpha1(str[e]);) {
             e += 1;

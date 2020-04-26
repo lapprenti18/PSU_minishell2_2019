@@ -87,11 +87,23 @@ int new_environement(env_t *new_env, char **tab);
 int setenv_(env_t *new_env, char *cmd, tree_t *tree);
 void segfault(int pid);
 int main_minishel(char *str, char **env);
-void simple_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
-void double_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
+void simple_right_redirect(tree_t *tree, env_t *new_env\
+, last_line_t *last_line);
+void double_right_redirect(tree_t *tree, env_t *new_env\
+, last_line_t *last_line);
 void pipe_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
 void simple_left_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line);
-char *my_clean_str(char *str);
 char *clear_str(char *str);
+void err_cd(char *cmd);
+void my_dup(tree_t *tree);
+int my_for(env_t *new_env, char **tab);
+int check_separator(char *str);
+char *opt_jsp(char *str, int temp, char *opt);
+char *opt_two(char *str, int temp, char *opt);
+char *hight_separator(char *str);
+char *test(char *str, char opt);
+char *parse_left(char *str, int size_str, char opt);
+char *parse_right(char *str, int size_str, int size_tot);
+void fd_gestion(int nb, tree_t *tree, int *new_fd);
 
 #endif /* MY_H_ */

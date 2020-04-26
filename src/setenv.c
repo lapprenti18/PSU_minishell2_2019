@@ -65,8 +65,7 @@ int setenv_(env_t *new_env, char *cmd, tree_t *tree)
     char **tab = my_str_to_word_array(cmd);
     int incr = 0;
 
-    dup2(tree->fd[0], 0);
-    dup2(tree->fd[1], 1);
+    my_dup(tree);
     if (tab[1] == NULL) {
         display_env(new_env, tree);
         return (0);
@@ -79,8 +78,7 @@ int setenv_(env_t *new_env, char *cmd, tree_t *tree)
             return (0);
         }
     }
-    for (incr = 0; new_env->good_env[incr] && str_ncmp(tab[1], \
-new_env->good_env[incr]) != 1; incr += 1);
+    incr = my_for(new_env, tab);
     if (new_env->good_env[incr] == NULL)
         return (new_environement(new_env, tab));
     add_env(new_env, incr, tab);

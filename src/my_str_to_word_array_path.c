@@ -21,7 +21,7 @@ int    nb_word(char *str)
 
 int is_alpha(char c)
 {
-    return ((c != ' ') && (c != '=') && (c != ':') && (c != '"') && (c != '\0'));
+    return (c != ' ' && c != '=' && c != ':' && c != '"' && c != '\0');
 }
 
 char    **fill_tab(char **tab, char *str, int t)
@@ -30,8 +30,7 @@ char    **fill_tab(char **tab, char *str, int t)
     int e = 0;
     int x;
 
-    for (int c = 0; c < t ; c++)
-    {
+    for (int c = 0; c < t ; c++) {
         x = 0;
         if (!is_alpha(str[e])) {
             e += 1;

@@ -17,16 +17,17 @@ char **search_path(env_t *new_env)
     if (new_env->good_env[0] == NULL)
         return (NULL);
     for (; new_env->good_env[temp] && str_ncmp("PATH=", \
-new_env->good_env[temp]) != 1; temp += 1);
+    new_env->good_env[temp]) != 1; temp += 1);
     if (new_env->good_env[temp] == NULL)
         return (NULL);
     path = my_str_to_word_array_path(new_env->good_env[temp]);
     return (path);
 }
 
-void exection(char *cmd, env_t *new_env, char **command, int *fd, int *new_fd)
+void exection(char *cmd, env_t *new_env, char **command, int *fd)
 {
     pid_t pid;
+    int new_fd[2] = {dup(0), dup(1)};
 
     pid = fork();
     if (pid == 0){
@@ -34,10 +35,11 @@ void exection(char *cmd, env_t *new_env, char **command, int *fd, int *new_fd)
         dup2(fd[1], 1);
         execve(cmd, command, new_env->good_env);
         print_error(command);
+        close(fd[0]);
+        close(fd[1]);
         exit (84);
     } else {
         wait(&pid);
-        close(fd[0]);
         close(fd[1]);
         dup2(new_fd[0], 0);
         dup2(new_fd[1], 1);
@@ -81,10 +83,7 @@ void go_fork(env_t *new_env, char **cmd, int *fd)
     char **path = search_path(new_env);
     int acces = 0;
     int temp;
-    int new_fd[2];
 
-    new_fd[0] = dup(0);
-    new_fd[1] = dup(1);
     if (!cmd[0])
         return;
     if (path == NULL) {
@@ -92,13 +91,13 @@ void go_fork(env_t *new_env, char **cmd, int *fd)
         return;
     }
     if ((access(cmd[0], X_OK)) == 0)
-        return (exection(cmd[0], new_env, cmd, fd, new_fd));
+        return (exection(cmd[0], new_env, cmd, fd));
     if (cmd[0][0] == '/')
         return (no_trace(new_env, cmd));
     for (temp = 1; path[temp]; temp += 1) {
         if ((acces = access(cat(cat(path[temp], "/"), cmd[0]), X_OK)) == 0)
             break;
     }
-    (acces == 0) ? exection(cat(cat(path[temp], "/"), cmd[0]), new_env, cmd, fd, new_fd) :\
-    my_putstr(cat(cmd[0], ": Command not found."), 0, 1);
+    (acces == 0) ? exection(cat(cat(path[temp], "/"), cmd[0]), new_env, cmd, \
+    fd) : my_putstr(cat(cmd[0], ": Command not found."), 0, 1);
 }

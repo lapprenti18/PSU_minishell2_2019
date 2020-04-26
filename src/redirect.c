@@ -63,7 +63,6 @@ void double_right_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
     cmd = my_str_to_word_array_path(tree->right->opt);
     if (cmd[0][my_strlen(cmd[0]) - 1] == '\n')
         cmd[0][my_strlen(cmd[0]) - 1] = '\0';
-    // cmd[0] = clear_str(cmd[0]);
     fd = open(cmd[0], O_WRONLY | O_APPEND | O_APPEND, 0664);
     tree->left->fd[1] = fd;
     execute_tree(tree->left, new_env, last_line);
@@ -86,7 +85,6 @@ void simple_left_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
     cmd = my_str_to_word_array_path(tree->right->opt);
     if (cmd[0][my_strlen(cmd[0]) - 1] == '\n')
         cmd[0][my_strlen(cmd[0]) - 1] = '\0';
-    // cmd[0] = clear_str(cmd[0]);
     fd = open(cmd[0], O_RDONLY);
     tree->left->fd[0] = fd;
     execute_tree(tree->left, new_env, last_line);
@@ -95,21 +93,21 @@ void simple_left_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
 
 void pipe_redirect(tree_t *tree, env_t *new_env, last_line_t *last_line)
 {
-   pid_t pid;
-   int new_fd[2];
+    pid_t pid;
+    int new_fd[2];
 
     if (tree->left->opt == NULL || tree->right->opt == NULL) {
         my_putstr("Invalid null command.", 0, 1);
         return;
     }
-    tree->left->fd[0] = tree->fd[0];
-    tree->right->fd[1] = tree->fd[1];
+    fd_gestion(0, tree, new_fd);
     pipe(new_fd);
-    tree->left->fd[1] = new_fd[1];
-    tree->right->fd[0] = new_fd[0];
+    fd_gestion(1, tree, new_fd);
     pid = fork();
     if (pid == 0) {
         execute_tree(tree->left, new_env, last_line);
+        close(new_fd[0]);
+        close(new_fd[1]);
         exit (0);
     } else {
         close(tree->left->fd[1]);
